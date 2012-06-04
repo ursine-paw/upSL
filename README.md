@@ -38,22 +38,18 @@ Substitute value of "game id" and "secret key" in ScoreloopManager.mm
 #define SL_SECRET_KEY "YOUR GAME SECRET KEY"</code></pre>
 
 #### Android
-You should add:
 
-* <code>Scoreloop.init(this, "YOUR GAME SECRET KEY");</code> in <code>onCreate()</code> method of Application class
-
-* <pre><code>Scoreloop.setActivity(this);
-Scoreloop.setGLSurfaceView(mGLView);</code></pre> in <code>onCreate(Bundle savedInstanceState)</code> method of Activity class
+Add in <code>onCreate()</code> method of Application class <pre><code>Scoreloop.init(this, "YOUR GAME SECRET KEY");</code></pre>
+Add in <code>onCreate(Bundle savedInstanceState)</code> method of Activity class <pre><code>Scoreloop.setActivity(this);
+Scoreloop.setGLSurfaceView(mGLView);</code></pre> 
 
 #### Blackberry
-You should have:
+You should have 
+<pre><code>if (Scoreloop::HandleBSPEvent(event))
+return true;</code></pre>
+in your event handler, see <code>void CCEGLView::setEventHandler(EventHandler* pHandler)</code> which introduced in [cocos2d-x][1] with [our pull request][2]
 
-* <code>if (Scoreloop::HandleBSPEvent(event))
-return true;</code>
-in your event handler, see
-<code>void CCEGLView::setEventHandler(EventHandler* pHandler)</code> which introduced in [cocos2d-x][1] with [our pull request][2]
-
-Substitute value of "game id" and "secret key" in qnx_scoreloop.cpp
+Don't forget to substitute value of "game id" and "secret key" in qnx_scoreloop.cpp
 <pre><code>#define SL_GAME_ID "YOUR GAME ID"
 #define SL_SECRET_KEY "YOUR GAME SECRET KEY"</code></pre>
 
