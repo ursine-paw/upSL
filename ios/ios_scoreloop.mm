@@ -1,5 +1,5 @@
 // Copyright (c) 2012 ursinepaw.com
-#include "..Scoreloop.h"
+#include "../Scoreloop.h"
 #include "ScoreloopManager.h"
 #import "SLCSessionController.h"
 #include <string>
