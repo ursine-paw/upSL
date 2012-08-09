@@ -163,7 +163,11 @@ namespace Scoreloop
 	void UserController::LoadUser(UserController* self)
 	{
 		Internal::UserControllerBundle* bundle = (Internal::UserControllerBundle*)self;
+#if defined(BB10)
+		SC_Error_t rc = SC_UserController_LoadUser(bundle->Controller);
+#else
 		SC_Error_t rc = SC_UserController_RequestUser(bundle->Controller);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -203,7 +207,11 @@ namespace Scoreloop
 	void UserController::RequestBuddies(UserController* self)
 	{
 		Internal::UserControllerBundle* bundle = (Internal::UserControllerBundle*)self;
+#if defined(BB10)
+		SC_Error_t rc = SC_UserController_LoadBuddies(bundle->Controller);
+#else
 		SC_Error_t rc = SC_UserController_RequestBuddies(bundle->Controller);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -242,6 +250,22 @@ namespace Scoreloop
 	{
 		static std::string result;
 		SC_String_h value = NULL;
+#if defined(BB10)
+		SC_Context_h context = SC_Score_GetContext((SC_Score_h)score);
+		if (context != NULL)
+		{
+			SC_Error_t rc = SC_Context_Get(context, key, &value);
+		if (rc != SC_OK)
+		{
+			result = "";
+			_HandleError(rc);
+		}
+		else
+			result = value != NULL ? SC_String_GetData(value) : "";
+		}
+		else
+			result = "";
+#else
 		SC_Error_t rc = SC_Score_GetContextString((SC_Score_h)score, key, &value);
 		if (rc != SC_OK)
 		{
@@ -250,17 +274,26 @@ namespace Scoreloop
 		}
 		else
 			result = value != NULL ? SC_String_GetData(value) : "";
+#endif
 		return result.c_str();
 	}
 
 	Score* ScoreList::GetScore(ScoreList* score_list, unsigned int idx)
 	{
+#if defined(BB10)
+		return (Score*)SC_ScoreList_GetAt((SC_ScoreList_h)score_list, idx);
+#else
 		return (Score*)SC_ScoreList_GetScore((SC_ScoreList_h)score_list, idx);
+#endif
 	}
 
 	unsigned int ScoreList::GetScoresCount(ScoreList* score_list)
 	{
+#if defined(BB10)
+		return SC_ScoreList_GetCount((SC_ScoreList_h)score_list);
+#else
 		return SC_ScoreList_GetScoresCount((SC_ScoreList_h)score_list);
+#endif
 	}
 
 	ScoreController* ScoreController::Create(RequestCompletionCallback callback)
@@ -286,7 +319,11 @@ namespace Scoreloop
 	{
 		SC_Error_t rc;
 		SC_Score_h score;
+#if defined(BB10)
+		rc = SC_Client_CreateScore(scClient, &score);
+#else
 		rc = SC_Score_New(&score);
+#endif
 		if (rc != SC_OK)
 		{
 			_HandleError(rc);
@@ -299,14 +336,29 @@ namespace Scoreloop
 
 		if (context)
 		{
+#if defined(BB10)
+			SC_Context_h sc_context = NULL;
+			rc = SC_Context_New(&sc_context);
+			if (rc == SC_OK)
+			{
+#endif
 			for (std::map<std::string, std::string>::iterator it = context->begin(); it != context->end(); ++it)
 			{
 				SC_String_h value = NULL;
 				rc = SC_String_New(&value, it->second.c_str());
 				if (rc == SC_OK)
 				{
+#if defined(BB10)
+					rc = SC_Context_Put(sc_context, it->first.c_str(), value);
+#else
 					rc = SC_Score_SetContextString(score, it->first.c_str(), value);
+#endif
 					SC_String_Release(value);
+					if (rc != SC_OK)
+					{
+						_HandleError(rc);
+						return;
+					}
 				}
 				else
 				{
@@ -314,6 +366,20 @@ namespace Scoreloop
 					return;
 				}
 			}
+#if defined(BB10)
+				rc = SC_Score_SetContext(score, sc_context);
+				if (rc != SC_OK)
+				{
+					_HandleError(rc);
+					return;
+				}
+			}
+			else
+			{
+				_HandleError(rc);
+				return;
+			}
+#endif
 		}
 
 		rc = SC_ScoreController_SubmitScore((SC_ScoreController_h)self, score);
@@ -359,7 +425,7 @@ namespace Scoreloop
 		}
 	}
 
-	void ScoresController::SetGameMode(ScoresController* self, unsigned int mode)
+	void ScoresController::SetMode(ScoresController* self, unsigned int mode)
 	{
 		SC_Error_t rc = SC_ScoresController_SetMode((SC_ScoresController_h)self, mode);
 		if (rc != SC_OK)
@@ -368,7 +434,12 @@ namespace Scoreloop
 
 	void ScoresController::LoadRange(ScoresController* self, unsigned int range_start, unsigned int range_length)
 	{
+#if defined(BB10)
+		SC_Range_t range = {range_start, range_length };
+		SC_Error_t rc = SC_ScoresController_LoadRange((SC_ScoresController_h)self, range);
+#else
 		SC_Error_t rc = SC_ScoresController_LoadRange((SC_ScoresController_h)self, range_start, range_length);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -423,12 +494,20 @@ namespace Scoreloop
 	
 	User* UserList::GetUser(UserList* self, unsigned int idx)
 	{
+#if defined(BB10)
+		return (User*)SC_UserList_GetAt((SC_UserList_h)self, idx);
+#else
 		return (User*)SC_UserList_GetUser((SC_UserList_h)self, idx);
+#endif
 	}
 
 	unsigned int UserList::GetUsersCount(UserList* self)
 	{
+#if defined(BB10)
+		return SC_UserList_GetCount((SC_UserList_h)self);
+#else
 		return SC_UserList_GetUsersCount((SC_UserList_h)self);
+#endif
 	}
 
 	UsersController* UsersController::Create(RequestCompletionCallback callback)
@@ -566,35 +645,99 @@ namespace Scoreloop
 
 	Achievement* AchievementList::GetAchievement(AchievementList* self, unsigned int idx)
 	{
+#if defined(BB10)
+		return (Achievement*)SC_AchievementList_GetAt((SC_AchievementList_h)self, idx);
+#else
 		return (Achievement*)SC_AchievementList_GetAchievement((SC_AchievementList_h)self, idx);
+#endif
 	}
 
 	unsigned int AchievementList::GetAchievementsCount(AchievementList* self)
 	{
+#if defined(BB10)
+		return SC_AchievementList_GetCount((SC_AchievementList_h)self);
+#else
 		return SC_AchievementList_GetAchievementsCount((SC_AchievementList_h)self);
+#endif
 	}
+
+
+#if defined(BB10)
+	struct AchievementsControllerImpl
+	{
+		SC_LocalAchievementsController_h	LocalAchievementsController;
+		SC_AchievementsController_h			AchievementsController;
+	};
+
+	namespace Internal
+	{
+		void _LocalAchievementsRequestComplete(void* userData, SC_Error_t result)
+		{
+			// stub
+		}
+	}
+#endif
 
 	AchievementsController* AchievementsController::Create(RequestCompletionCallback callback)
 	{
+#if defined(BB10)
+		AchievementsControllerImpl* impl = new AchievementsControllerImpl();
+		SC_Error_t rc = SC_Client_CreateAchievementsController(scClient, &impl->AchievementsController, Internal::_RequestComplete, (void*)callback);
+		if (rc == SC_OK)
+		{
+			SC_Error_t rc = SC_Client_CreateLocalAchievementsController(scClient, &impl->LocalAchievementsController, Internal::_LocalAchievementsRequestComplete, 0);
+			if (rc == SC_OK)
+				return (AchievementsController*)impl;
+			else
+				_HandleError(rc);
+		}
+		else
+			_HandleError(rc);
+		delete impl;
+		return NULL;
+#else
 		SC_AchievementsController_h controller = NULL;
 		SC_Error_t rc = SC_Client_CreateAchievementsController(scClient, &controller, Internal::_RequestComplete, (void*)callback);
 		if (rc != SC_OK)
 			_HandleError(rc);
 		return (AchievementsController*)controller;
+#endif
 	}
 
 	void AchievementsController::Release(AchievementsController* self)
 	{
+#if defined(BB10)
+		AchievementsControllerImpl* impl = (AchievementsControllerImpl*)self;
+		SC_LocalAchievementsController_Release(impl->LocalAchievementsController);
+		SC_AchievementsController_Release(impl->AchievementsController);
+		delete impl;
+#else
 		SC_AchievementsController_Release((SC_AchievementsController_h)self);
+#endif
 	}
 
 	User* AchievementsController::GetUser(AchievementsController* self)
 	{
+#if defined(BB10)
+		return (User*)SC_AchievementsController_GetUser(((AchievementsControllerImpl*)self)->AchievementsController);
+#else
 		return (User*)SC_AchievementsController_GetUser((SC_AchievementsController_h)self);
+#endif
 	}
 	
 	void AchievementsController::LoadAchievements(AchievementsController* self, User* user)
 	{
+#if defined(BB10)
+		SC_User_h sc_user = (SC_User_h)user;
+		if (sc_user == NULL)
+		{
+			SC_Session_h session = SC_Client_GetSession(scClient);
+			sc_user = SC_Session_GetUser(session);
+		}
+		SC_Error_t rc = SC_AchievementsController_LoadAchievementsForCurrentGame(((AchievementsControllerImpl*)self)->AchievementsController, sc_user);
+		if (rc != SC_OK)
+			_HandleError(rc);
+#else
 		SC_Error_t rc == SC_OK;
 		if (user != NULL)
 			rc = SC_AchievementsController_SetUser((SC_AchievementsController_h)self, (SC_User_h)user);
@@ -607,34 +750,58 @@ namespace Scoreloop
 		else
 			_HandleError(rc);
 
+#endif
+
 	}
 
 	bool AchievementsController::ShouldSynchronizeAchievements(AchievementsController* self)
 	{
+#if defined(BB10)
+		return SC_LocalAchievementsController_ShouldSynchronizeAchievements(((AchievementsControllerImpl*)self)->LocalAchievementsController) == SC_TRUE;
+#else
 		return SC_AchievementsController_ShouldSynchronizeAchievements((SC_AchievementsController_h)self) == SC_TRUE;
+#endif
 	}
 
 	void AchievementsController::SynchronizeAchievements(AchievementsController* self)
 	{
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_SynchronizeAchievements(((AchievementsControllerImpl*)self)->LocalAchievementsController);
+#else
 		SC_Error_t rc = SC_AchievementsController_SynchronizeAchievements((SC_AchievementsController_h)self);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
 
 	AchievementList* AchievementsController::GetAchievements(AchievementsController* self)
 	{
+#if defined(BB10)
+		return (AchievementList*)SC_LocalAchievementsController_GetAchievements(((AchievementsControllerImpl*)self)->LocalAchievementsController);
+#else
 		return (AchievementList*)SC_AchievementsController_GetAchievements((SC_AchievementsController_h)self);
+#endif
 	}
 
 	unsigned int AchievementsController::GetAchievedAwardsCount(AchievementsController* self)
 	{
+#if defined(BB10)
+		return 0;
+		// @todo Scoreloop engineers forgot about this, so we must comment out it
+		//return SC_LocalAchievementsController_GetAchievedCount(((AchievementsControllerImpl*)self)->LocalAchievementsController);
+#else
 		return SC_AchievementsController_CountAchievedAwards((SC_AchievementsController_h)self);
+#endif
 	}
 
 	Achievement* AchievementsController::GetAchievementForAwardIdentifier(AchievementsController* self, const char* award_identifier)
 	{
 		SC_Achievement_h result = NULL;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_GetAchievementForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, &result);
+#else
 		SC_Error_t rc = SC_AchievementsController_GetAchievementForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, &result);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 		return (Achievement*)result;
@@ -643,7 +810,11 @@ namespace Scoreloop
 	bool AchievementsController::IsAchievedForAwardIdentifier(AchievementsController* self, const char* award_identifier)
 	{
 		SC_Bool_t result = SC_FALSE;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_IsAchievedForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, &result);
+#else
 		SC_Error_t rc = SC_AchievementsController_IsAchievedForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, &result);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 		return result == SC_TRUE;
@@ -652,7 +823,11 @@ namespace Scoreloop
 	int AchievementsController::GetValueForAwardIdentifier(AchievementsController* self, const char* award_identifier)
 	{
 		int result = 0;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_GetValueForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, &result);
+#else
 		SC_Error_t rc = SC_AchievementsController_GetValueForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, &result);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 		return result;
@@ -661,7 +836,11 @@ namespace Scoreloop
 	void AchievementsController::SetValueForAwardIdentifier(AchievementsController* self, const char* award_identifier, int value)
 	{
 		SC_Bool_t is_achieved = SC_FALSE;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_SetValueForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, value, &is_achieved);
+#else
 		SC_Error_t rc = SC_AchievementsController_SetValueForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, value, &is_achieved);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -669,7 +848,11 @@ namespace Scoreloop
 	void AchievementsController::SetAchievedValueForAwardIdentifier(AchievementsController* self, const char* award_identifier)
 	{
 		SC_Bool_t success = SC_FALSE;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_SetAchievedValueForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, &success);
+#else
 		SC_Error_t rc = SC_AchievementsController_SetAchievedValueForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, &success);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -677,7 +860,11 @@ namespace Scoreloop
 	void AchievementsController::IncrementValueForAwardIdentifier(AchievementsController* self, const char* award_identifier)
 	{
 		SC_Bool_t is_achieved = SC_FALSE;
+#if defined(BB10)
+		SC_Error_t rc = SC_LocalAchievementsController_IncrementValueForAwardIdentifier(((AchievementsControllerImpl*)self)->LocalAchievementsController, award_identifier, &is_achieved);
+#else
 		SC_Error_t rc = SC_AchievementsController_IncrementValueForAwardIdentifier((SC_AchievementsController_h)self, award_identifier, &is_achieved);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -718,14 +905,22 @@ namespace Scoreloop
 
 	void RankingController::LoadRankingForScore(RankingController* self, Score* score)
 	{
+#if defined(BB10)
+		SC_Error_t rc = SC_RankingController_LoadRankingForScore((SC_RankingController_h)self, (SC_Score_h)score);
+#else
 		SC_Error_t rc = SC_RankingController_RequestRankingForScore((SC_RankingController_h)self, (SC_Score_h)score);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
 
 	void RankingController::LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode)
 	{
+#if defined(BB10)
+		SC_Error_t rc = SC_RankingController_LoadRankingForUserInMode((SC_RankingController_h)self, (SC_User_h)user, mode);
+#else
 		SC_Error_t rc = SC_RankingController_RequestRankingForUserInGameMode((SC_RankingController_h)self, (SC_User_h)user, mode);
+#endif
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}
@@ -755,7 +950,10 @@ namespace Scoreloop
 			{
 				//NativeDialog::ShowHtml("To use Scoreloop you must permit Device Identifying Information for application.\nIt can be done in <b>Settings - Security - Application permissions</b> menu");
 			}
-			else if (rc != SC_INIT_REJECTED_EULA)
+			else
+#if !defined(BB10)			
+			 if (rc != SC_INIT_REJECTED_EULA)				
+#endif
 				_HandleError(rc);
 			return;
 		}
