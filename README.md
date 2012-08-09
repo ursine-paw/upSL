@@ -12,48 +12,6 @@ It is provide C-style API. Never store pointers to objects that created by Score
 We don't cover all parts of Scoreloop, only things what we need in our games. Feel free make code modifications and share it with us :)
 
 ---
-## Integration guide
-
-We use it with:
-
-* Scoreloop 4.3 for iOS
-* Scoreloop 1.0 for BlackBerry (included in blackberry native sdk 2.0)
-* Scoreloop 3.0.2 for Android
-
-### Initialize and shutdown
-You should add:
-
-* <code>Scoreloop::Client::Initialize(TOSAccepted);</code> in <code>Application::applicationDidFinishLaunching()</code>.</br>
-Where <code>TOSAccepted</code> is a callback which called when user accept TOS or immediatly after initialisation if he did it early
-
-* <code>Scoreloop::Client::Shutdown();</code> in Application::~Application()
-
-<b>!NOTICE!</b>
-You can use scoreloop functions only if receive TOSAccepted callback.
-
-### Platform specific part
-#### iOS
-Substitute value of "game id" and "secret key" in ScoreloopManager.mm
-<pre><code>#define SL_GAME_ID "YOUR GAME ID"
-#define SL_SECRET_KEY "YOUR GAME SECRET KEY"</code></pre>
-
-#### Android
-
-Add in <code>onCreate()</code> method of Application class <pre><code>Scoreloop.init(this, "YOUR GAME SECRET KEY");</code></pre>
-Add in <code>onCreate(Bundle savedInstanceState)</code> method of Activity class <pre><code>Scoreloop.setActivity(this);
-Scoreloop.setGLSurfaceView(mGLView);</code></pre> 
-
-#### Blackberry
-You should have 
-<pre><code>if (Scoreloop::HandleBSPEvent(event))
-return true;</code></pre>
-in your event handler, see <code>void CCEGLView::setEventHandler(EventHandler* pHandler)</code> which introduced in [cocos2d-x][1] with [our pull request][2]
-
-Don't forget to substitute value of "game id" and "secret key" in qnx_scoreloop.cpp
-<pre><code>#define SL_GAME_ID "YOUR GAME ID"
-#define SL_SECRET_KEY "YOUR GAME SECRET KEY"</code></pre>
-
----
 
 ## License
 ### Summary
