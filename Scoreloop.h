@@ -313,7 +313,7 @@ namespace Scoreloop
 		* This function sets the mode for the controller. The controller will only retrieve scores whose modes match this value.
 		* If no mode is explicitly set for the controller, it will retrieve the scores for mode 0.
 		*/
-		static void SetGameMode(ScoresController* self, unsigned int mode);
+		static void SetMode(ScoresController* self, unsigned int mode);
 
 		/**
 		* Starts loading the given range of scores.
@@ -592,14 +592,6 @@ namespace Scoreloop
 		static void Release(AchievementsController* self);
 
 		/**
-		* Sets the user for whom the achievements are requested.
-		*
-		* This method sets the user for whom the achievements are requested. The current session user is used by default unless otherwise specified.
-		* Call this method only if the achievements for a user other than the current session user are required.
-		*/
-		static void SetUser(AchievementsController* self, User* user);
-
-		/**
 		* Gets the user for whom the achievements are requested.
 		*
 		* This method gets the user for whom the achievements are requested.
@@ -607,14 +599,14 @@ namespace Scoreloop
 		static User* GetUser(AchievementsController* self);
 
 		/**
-		* Loads the achievements for the user that is returned by AchievementsController::GetUser().
+		* Loads the achievements for the specified user.
 		*
-		* This method loads achievements for the user that is returned by AchievementsController::GetUser(). 
+		* This method loads achievements for the specified user.
 		* Achievements for the session owner are loaded from local storage, achievements for other users are retrieved from the Scoreloop server.
 		* This method loads all achievements, whether they have been achieved or not. Note that this is an asynchronous call and a callback will be triggered, after which you can call SC_AchievementsController_GetAchievements() to access the list that is retrieved.
 		* The awards bundle will be loaded transparently.
 		*/
-		static void LoadAchievements(AchievementsController* self);
+		static void LoadAchievements(AchievementsController* self, User* user = NULL);
 
 		/**
 		* Checks whether AchievementsController::SynchronizeAchievements() should be called or not.
@@ -729,6 +721,14 @@ namespace Scoreloop
 		* Note that this is an asynchronous call and a callback will be triggered after which you could access the retrieved ranking by calling RankingController::GetRank().
 		*/
 		static void LoadRankingForScore(RankingController* self, Score* score);
+		
+		/**
+		* Requests the ranking of a given user for a given mode.
+		*
+		* This function is used to request the ranking of a given user.
+		* Note that this is an asynchronous call and a callback will be triggered after which you could access the retrieved ranking by calling RankingController::GetRank().
+		*/
+		static void LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode);
 		
 		/**
 		* Returns the rank that is retrieved after making a successful server request.

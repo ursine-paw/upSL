@@ -588,23 +588,25 @@ namespace Scoreloop
 		SC_AchievementsController_Release((SC_AchievementsController_h)self);
 	}
 
-	void AchievementsController::SetUser(AchievementsController* self, User* user)
-	{
-		SC_Error_t rc = SC_AchievementsController_SetUser((SC_AchievementsController_h)self, (SC_User_h)user);
-		if (rc != SC_OK)
-			_HandleError(rc);
-	}
-
 	User* AchievementsController::GetUser(AchievementsController* self)
 	{
 		return (User*)SC_AchievementsController_GetUser((SC_AchievementsController_h)self);
 	}
-
-	void AchievementsController::LoadAchievements(AchievementsController* self)
+	
+	void AchievementsController::LoadAchievements(AchievementsController* self, User* user)
 	{
-		SC_Error_t rc = SC_AchievementsController_LoadAchievements((SC_AchievementsController_h)self);
-		if (rc != SC_OK)
+		SC_Error_t rc == SC_OK;
+		if (user != NULL)
+			rc = SC_AchievementsController_SetUser((SC_AchievementsController_h)self, (SC_User_h)user);
+		if (rc == SC_OK)
+		{
+			rc = SC_AchievementsController_LoadAchievements((SC_AchievementsController_h)self);
+			if (rc != SC_OK)
+				_HandleError(rc);
+		}
+		else
 			_HandleError(rc);
+
 	}
 
 	bool AchievementsController::ShouldSynchronizeAchievements(AchievementsController* self)
@@ -717,6 +719,13 @@ namespace Scoreloop
 	void RankingController::LoadRankingForScore(RankingController* self, Score* score)
 	{
 		SC_Error_t rc = SC_RankingController_RequestRankingForScore((SC_RankingController_h)self, (SC_Score_h)score);
+		if (rc != SC_OK)
+			_HandleError(rc);
+	}
+
+	void RankingController::LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode)
+	{
+		SC_Error_t rc = SC_RankingController_RequestRankingForUserInGameMode((SC_RankingController_h)self, (SC_User_h)user, mode);
 		if (rc != SC_OK)
 			_HandleError(rc);
 	}

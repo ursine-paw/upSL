@@ -644,7 +644,7 @@ namespace Scoreloop
 		}
 	}
 
-	void ScoresController::SetGameMode(ScoresController* self, unsigned int mode)
+	void ScoresController::SetMode(ScoresController* self, unsigned int mode)
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
@@ -1188,18 +1188,6 @@ namespace Scoreloop
 			env->DeleteGlobalRef((jobject)self);
 	}
 
-	void AchievementsController::SetUser(AchievementsController* self, User* user)
-	{
-		JniMethodInfo t;
-        if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
-            "setUser",
-            "(Lcom/scoreloop/client/android/core/model/User;)V"))
-		{
-			t.env->CallVoidMethod((jobject)self, t.methodID, (jobject)user);
-		}
-	}
-
 	User* AchievementsController::GetUser(AchievementsController* self)
 	{
 		JniMethodInfo t;
@@ -1215,9 +1203,21 @@ namespace Scoreloop
 		return NULL;
 	}
 
-	void AchievementsController::LoadAchievements(AchievementsController* self)
+	void AchievementsController::LoadAchievements(AchievementsController* self, User* user)
 	{
 		JniMethodInfo t;
+
+		if (user != NULL)
+		{
+			if (JniHelper::getMethodInfo(t,
+				"com.scoreloop.client.android.core.controller.AchievementsController",
+				"setUser",
+				"(Lcom/scoreloop/client/android/core/model/User;)V"))
+			{
+				t.env->CallVoidMethod((jobject)self, t.methodID, (jobject)user);
+			}
+		}
+
 		if (JniHelper::getMethodInfo(t,
             "com.scoreloop.client.android.core.controller.AchievementsController",
             "setForceInitialSync",
@@ -1568,6 +1568,20 @@ namespace Scoreloop
             "(Lcom/scoreloop/client/android/core/controller/RankingController;Lcom/scoreloop/client/android/core/model/Score;)V"))
 		{
 			t.env->CallStaticVoidMethod(t.classID, t.methodID, (jobject)self, (jobject)score);
+			t.env->DeleteLocalRef(t.classID);
+		}
+	}
+	
+	
+	void RankingController::LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode)
+	{
+		JniMethodInfo t;
+        if (JniHelper::getStaticMethodInfo(t,
+            "com.ursinepaw.scoreloop.Scoreloop",
+            "rankingControllerLoadRankingForUserInMode",
+            "(Lcom/scoreloop/client/android/core/controller/RankingController;Lcom/scoreloop/client/android/core/model/User;I)V"))
+		{
+			t.env->CallStaticVoidMethod(t.classID, t.methodID, (jobject)self, (jobject)user, mode);
 			t.env->DeleteLocalRef(t.classID);
 		}
 	}

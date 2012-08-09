@@ -463,6 +463,15 @@ public class Scoreloop {
 		});
 	}
 	
+	public static void rankingControllerLoadRankingForUserInMode(final RankingController controller, final User user, int mode) {
+		mActivity.runOnUiThread(new Runnable() {			
+			@Override
+			public void run() {
+				controller.loadRankingForUserInGameMode(user, mode);
+			}
+		});
+	}
+	
 	public static void initialize(final long callback_address) {	
 		TermsOfService tos = Session.getCurrentSession().getUsersTermsOfService();
 		TermsOfService.Status status = tos.getStatus();

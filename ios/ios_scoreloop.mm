@@ -219,7 +219,7 @@ namespace Scoreloop
 		}
 	}
 	
-	void ScoresController::SetGameMode(ScoresController* self, unsigned int mode)
+	void ScoresController::SetMode(ScoresController* self, unsigned int mode)
 	{
 		SLCScoresControllerSmart* controller = (SLCScoresControllerSmart*)self;
 		controller.mode = mode;
@@ -478,18 +478,15 @@ namespace Scoreloop
 		[controller release];
 	}
 	
-	void AchievementsController::SetUser(AchievementsController* self, User* user)
-	{
-		((SLCAchievementsControllerSmart*)self).user = (SLCUser*)user;
-	}
-	
 	User* AchievementsController::GetUser(AchievementsController* self)
 	{
 		return (User*)((SLCAchievementsControllerSmart*)self).user;
 	}
 	
-	void AchievementsController::LoadAchievements(AchievementsController* self)
+	void AchievementsController::LoadAchievements(AchievementsController* self, User* user)
 	{
+		if (user != NULL)
+			((SLCAchievementsControllerSmart*)self).user = (SLCUser*)user;
 		[((SLCAchievementsControllerSmart*)self) loadAchievements];
 	}
 	
@@ -597,5 +594,11 @@ namespace Scoreloop
 		SLCRankingControllerSmart* controller = (SLCRankingControllerSmart*)self;
 		NSNumber* rank = [controller.ranking valueForKey:@"total"];
 		return [rank unsignedIntValue];
+	}
+	
+	void RankingController::LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode)
+	{
+		SLCRankingControllerSmart* controller = (SLCRankingControllerSmart*)self;
+		[controller requestRankingForUser:(SLCUser*)user inGameMode:(NSUInteger)mode];
 	}
 }

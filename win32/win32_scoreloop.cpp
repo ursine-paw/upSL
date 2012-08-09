@@ -147,7 +147,7 @@ namespace Scoreloop
 	{
 	}
 
-	void ScoresController::SetGameMode(ScoresController* self, unsigned int mode)
+	void ScoresController::SetMode(ScoresController* self, unsigned int mode)
 	{
 	}
 
@@ -309,16 +309,12 @@ namespace Scoreloop
 	{
 	}
 
-	void AchievementsController::SetUser(AchievementsController* self, User* user)
-	{
-	}
-
 	User* AchievementsController::GetUser(AchievementsController* self)
 	{
 		return NULL;
 	}
 
-	void AchievementsController::LoadAchievements(AchievementsController* self)
+	void AchievementsController::LoadAchievements(AchievementsController* self, User* user)
 	{
 	}
 
@@ -382,6 +378,10 @@ namespace Scoreloop
 	}
 
 	void RankingController::LoadRankingForScore(RankingController* self, Score* score)
+	{
+	}
+		
+	void RankingController::LoadRankingForUserInMode(RankingController* self, User* user, unsigned int mode)
 	{
 	}
 		
