@@ -12,22 +12,22 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "getLogin",
             "()Ljava/lang/String;"))
-		{
-			
+		{			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
-			t.env->DeleteLocalRef(t.classID);
+			t.env->DeleteLocalRef(t.classID);			
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);				
+			}
 		}
 		return result.c_str();
 	}
@@ -39,23 +39,24 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "getEmailAddress",
             "()Ljava/lang/String;"))
 		{
 			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
 			t.env->DeleteLocalRef(t.classID);
-		}
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);			
+			}
+		}		
 		return result.c_str();
 	}
 
@@ -66,22 +67,23 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "getIdentifier",
             "()Ljava/lang/String;"))
 		{
 			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
 			t.env->DeleteLocalRef(t.classID);
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);				
+			}
 		}
 		return result.c_str();
 	}
@@ -90,7 +92,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "setLogin",
             "(Ljava/lang/String;)V"))
 		{
@@ -105,7 +107,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "setEmailAddress",
             "(Ljava/lang/String;)V"))
 		{
@@ -120,7 +122,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.User",
+            "com/scoreloop/client/android/core/model/User",
             "getBuddyUsers",
             "()Ljava/util/List;"))
 		{
@@ -135,12 +137,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "sessionGetUser",
             "()Lcom/scoreloop/client/android/core/model/User;"))
 		{
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (User*)ret;
 		}
@@ -151,14 +152,13 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/UserController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
 			return (UserController*)t.env->NewGlobalRef(ret);
 		}
 		return NULL;
@@ -175,12 +175,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.UserController",
+            "com/scoreloop/client/android/core/controller/UserController",
             "getUser",
             "()Lcom/scoreloop/client/android/core/model/User;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);			
 			return (User*)ret;
 		}
@@ -191,7 +190,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerLoadUser",
             "(Lcom/scoreloop/client/android/core/controller/UserController;)V"))
 		{
@@ -204,7 +203,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerSubmitUser",
             "(Lcom/scoreloop/client/android/core/controller/UserController;)V"))
 		{
@@ -217,7 +216,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.UserController",
+            "com/scoreloop/client/android/core/controller/UserController",
             "setUser",
             "(Lcom/scoreloop/client/android/core/model/Entity;)V"))
 		{
@@ -230,7 +229,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerAddAsBuddy",
             "(Lcom/scoreloop/client/android/core/controller/UserController;)V"))
 		{
@@ -243,7 +242,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerRemoveAsBuddy",
             "(Lcom/scoreloop/client/android/core/controller/UserController;)V"))
 		{
@@ -256,7 +255,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "userControllerRequestBuddies",
             "(Lcom/scoreloop/client/android/core/controller/UserController;)V"))
 		{
@@ -269,7 +268,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getResult",
             "()Ljava/lang/Double;"))
 		{
@@ -280,7 +279,7 @@ namespace Scoreloop
 			{
 				jdouble ret = 0.0;
 				if (JniHelper::getMethodInfo(t,
-						"java.lang.Double",
+						"java/lang/Double",
 						"doubleValue",
 						"()D"))
 				{
@@ -298,7 +297,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getMinorResult",
             "()Ljava/lang/Double;"))
 		{
@@ -309,7 +308,7 @@ namespace Scoreloop
 			{ 
 				jdouble ret = 0.0;
 				if (JniHelper::getMethodInfo(t,
-						"java.lang.Double",
+						"java/lang/Double",
 						"doubleValue",
 						"()D"))
 				{
@@ -327,7 +326,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getLevel",
             "()Ljava/lang/Integer;"))
 		{
@@ -338,7 +337,7 @@ namespace Scoreloop
 			{
 				jint ret = 0;
 				if (JniHelper::getMethodInfo(t,
-						"java.lang.Integer",
+						"java/lang/Integer",
 						"intValue",
 						"()I"))
 				{
@@ -356,7 +355,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getMode",
             "()Ljava/lang/Integer;"))
 		{
@@ -367,7 +366,7 @@ namespace Scoreloop
 			{
 				jint ret = 0;
 				if (JniHelper::getMethodInfo(t,
-						"java.lang.Integer",
+						"java/lang/Integer",
 						"intValue",
 						"()I"))
 				{
@@ -385,7 +384,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getRank",
             "()Ljava/lang/Integer;"))
 		{
@@ -396,7 +395,7 @@ namespace Scoreloop
 			{
 				jint ret = 0;
 				if (JniHelper::getMethodInfo(t,
-						"java.lang.Integer",
+						"java/lang/Integer",
 						"intValue",
 						"()I"))
 				{
@@ -414,12 +413,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getUser",
             "()Lcom/scoreloop/client/android/core/model/User;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (User*)ret;
 		}
@@ -433,7 +431,7 @@ namespace Scoreloop
 
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Score",
+            "com/scoreloop/client/android/core/model/Score",
             "getContext",
             "()Ljava/util/Map;"))
 		{
@@ -441,7 +439,7 @@ namespace Scoreloop
 			t.env->DeleteLocalRef(t.classID);
 			if (context && 
 				JniHelper::getMethodInfo(t,
-					"java.util.Map",
+					"java/util/Map",
 					"get",
 					"(Ljava/lang/Object;)Ljava/lang/Object;"))
 			{
@@ -449,7 +447,6 @@ namespace Scoreloop
 				jstring ret = (jstring)t.env->CallObjectMethod(context, t.methodID, arg);
 				t.env->DeleteLocalRef(arg);
 				t.env->DeleteLocalRef(t.classID);
-
 				if (ret)
 				{
 					jboolean is_copy = 0;
@@ -469,7 +466,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "get",
             "(I)Ljava/lang/Object;"))
 		{
@@ -484,7 +481,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "size",
             "()I"))
 		{
@@ -499,14 +496,13 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoreControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/ScoreController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
 			return (ScoreController*)t.env->NewGlobalRef(ret);
 		}
 		return NULL;
@@ -523,12 +519,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.ScoreController",
+            "com/scoreloop/client/android/core/controller/ScoreController",
             "getScore",
             "()Lcom/scoreloop/client/android/core/model/Score;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (Score*)ret;
 		}
@@ -539,7 +534,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoreControllerSubmitScore",
             "(Lcom/scoreloop/client/android/core/controller/ScoreController;DDIILjava/util/Map;)V"))
 		{
@@ -581,14 +576,13 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/ScoresController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
 			return (ScoresController*)t.env->NewGlobalRef(ret);
 		}
 		return NULL;
@@ -625,7 +619,7 @@ namespace Scoreloop
 		jobject search_list = NULL;
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.scoreloop.client.android.core.model.SearchList",
+            "com/scoreloop/client/android/core/model/SearchList",
             method_name,
             "()Lcom/scoreloop/client/android/core/model/SearchList;"))
 		{
@@ -635,7 +629,7 @@ namespace Scoreloop
 
 		if (search_list != NULL &&
 			JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.controller.ScoresController",
+					"com/scoreloop/client/android/core/controller/ScoresController",
 					"setSearchList",
 					"(Lcom/scoreloop/client/android/core/model/SearchList;)V"))
 		{
@@ -648,7 +642,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.ScoresController",
+            "com/scoreloop/client/android/core/controller/ScoresController",
             "setMode",
             "(Ljava/lang/Integer;)V"))
 		{
@@ -666,7 +660,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadRange",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;II)V"))
 		{
@@ -679,7 +673,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadRangeForUser",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;Lcom/scoreloop/client/android/core/model/User;I)V"))
 		{
@@ -692,7 +686,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadRangeAtRank",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;II)V"))
 		{
@@ -705,7 +699,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadRangeForScore",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;Lcom/scoreloop/client/android/core/model/Score;I)V"))
 		{
@@ -718,7 +712,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadNextRange",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;)V"))
 		{
@@ -731,7 +725,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "scoresControllerLoadPreviousRange",
             "(Lcom/scoreloop/client/android/core/controller/ScoresController;)V"))
 		{
@@ -744,7 +738,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.ScoresController",
+            "com/scoreloop/client/android/core/controller/ScoresController",
             "hasPreviousRange",
             "()Z"))
 		{
@@ -759,7 +753,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.ScoresController",
+            "com/scoreloop/client/android/core/controller/ScoresController",
             "hasNextRange",
             "()Z"))
 		{
@@ -774,12 +768,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.ScoresController",
+            "com/scoreloop/client/android/core/controller/ScoresController",
             "getScores",
             "()Ljava/util/List;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (ScoreList*)ret;
 		}
@@ -790,7 +783,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "get",
             "(I)Ljava/lang/Object;"))
 		{
@@ -806,7 +799,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "size",
             "()I"))
 		{
@@ -821,15 +814,14 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "usersControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/UsersController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
-			return (UsersController*)t.env->NewGlobalRef(ret);
+			return (UsersController*)t.env->NewGlobalRef(ret);;
 		}
 		return NULL;
 	}
@@ -845,7 +837,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "usersControllerSearchByLogin",
             "(Lcom/scoreloop/client/android/core/controller/UsersController;Ljava/lang/String;IIZ)V"))
 		{
@@ -860,7 +852,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "usersControllerSearchByEmail",
             "(Lcom/scoreloop/client/android/core/controller/UsersController;Ljava/lang/String;IIZ)V"))
 		{
@@ -875,7 +867,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.UsersController",
+            "com/scoreloop/client/android/core/controller/UsersController",
             "isOverLimit",
             "()Z"))
 		{
@@ -890,12 +882,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.UsersController",
+            "com/scoreloop/client/android/core/controller/UsersController",
             "getUsers",
             "()Ljava/util/List;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (UserList*)ret;
 		}
@@ -906,7 +897,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Money",
+            "com/scoreloop/client/android/core/model/Money",
             "getAmount",
             "()Ljava/math/BigDecimal"))
 		{
@@ -917,7 +908,7 @@ namespace Scoreloop
 			{
 				jlong ret = 0;
 				if (JniHelper::getMethodInfo(t,
-						"java.math.BigDecimal",
+						"java/math/BigDecimal",
 						"longValue",
 						"()J"))
 				{
@@ -938,22 +929,22 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getIdentifier",
             "()Ljava/lang/String;"))
-		{
-			
+		{			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
 			t.env->DeleteLocalRef(t.classID);
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);				
+			}
 		}
 		return result.c_str();
 	}
@@ -962,7 +953,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getInitialValue",
             "()I"))
 		{
@@ -977,7 +968,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getAchievingValue",
             "()I"))
 		{
@@ -995,22 +986,23 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getLocalizedDescription",
             "()Ljava/lang/String;"))
 		{
 			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
 			t.env->DeleteLocalRef(t.classID);
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);
+			}			
 		}
 		return result.c_str();
 	}
@@ -1022,22 +1014,23 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getLocalizedTitle",
             "()Ljava/lang/String;"))
 		{
 			
 			jstring ret = (jstring)t.env->CallObjectMethod((jobject)self, t.methodID);
-
-			jboolean is_copy = 0;
-			const char* str = t.env->GetStringUTFChars(ret, &is_copy);
-			if (str)
-				result = str;
-			if (is_copy)
-				t.env->ReleaseStringUTFChars(ret, str);			
-			t.env->DeleteLocalRef(ret);
-
 			t.env->DeleteLocalRef(t.classID);
+			if (ret)
+			{
+				jboolean is_copy = 0;
+				const char* str = t.env->GetStringUTFChars(ret, &is_copy);
+				if (str)
+					result = str;
+				if (is_copy)
+					t.env->ReleaseStringUTFChars(ret, str);			
+				t.env->DeleteLocalRef(ret);
+			}			
 		}
 		return result.c_str();
 	}
@@ -1046,12 +1039,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "getRewardMoney",
             "()Lcom/scoreloop/client/android/core/model/Money;"))
 		{			
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);	
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (Money*)ret;
 		}
@@ -1062,7 +1054,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "isAchievedByValue",
             "(I)Z"))
 		{			
@@ -1077,7 +1069,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Award",
+            "com/scoreloop/client/android/core/model/Award",
             "isValidCounterValue",
             "(I)Z"))
 		{			
@@ -1092,12 +1084,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Achievement",
+            "com/scoreloop/client/android/core/model/Achievement",
             "getAward",
             "()Lcom/scoreloop/client/android/core/model/Award;"))
 		{			
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);	
-			t.env->DeleteLocalRef(ret);
 			t.env->DeleteLocalRef(t.classID);
 			return (Award*)ret;
 		}
@@ -1108,7 +1099,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Achievement",
+            "com/scoreloop/client/android/core/model/Achievement",
             "getValue",
             "()I"))
 		{
@@ -1123,7 +1114,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.model.Achievement",
+            "com/scoreloop/client/android/core/model/Achievement",
             "isAchieved",
             "()Z"))
 		{			
@@ -1138,7 +1129,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "get",
             "(I)Ljava/lang/Object;"))
 		{
@@ -1153,7 +1144,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "java.util.List",
+            "java/util/List",
             "size",
             "()I"))
 		{
@@ -1168,14 +1159,13 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "achievementsControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/AchievementsController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
 			return (AchievementsController*)t.env->NewGlobalRef(ret);
 		}
 		return NULL;
@@ -1192,12 +1182,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getUser",
             "()Lcom/scoreloop/client/android/core/model/User;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			return (User*)ret;
 		}
 		return NULL;
@@ -1210,7 +1199,7 @@ namespace Scoreloop
 		if (user != NULL)
 		{
 			if (JniHelper::getMethodInfo(t,
-				"com.scoreloop.client.android.core.controller.AchievementsController",
+				"com/scoreloop/client/android/core/controller/AchievementsController",
 				"setUser",
 				"(Lcom/scoreloop/client/android/core/model/User;)V"))
 			{
@@ -1219,7 +1208,7 @@ namespace Scoreloop
 		}
 
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "setForceInitialSync",
             "(Z)V"))
 		{
@@ -1228,7 +1217,7 @@ namespace Scoreloop
 		}
 
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "achievementsControllerLoadAchievements",
             "(Lcom/scoreloop/client/android/core/controller/AchievementsController;)V"))
 		{
@@ -1244,7 +1233,7 @@ namespace Scoreloop
 
 		JniMethodInfo t;
 		if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "achievementsControllerShouldSynchronizeAchievements",
             "()Z"))
 		{
@@ -1258,7 +1247,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
 		if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "setForceInitialSync",
             "(Z)V"))
 		{
@@ -1267,7 +1256,7 @@ namespace Scoreloop
 		}
 
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "achievementsControllerLoadAchievements",
             "(Lcom/scoreloop/client/android/core/controller/AchievementsController;)V"))
 		{
@@ -1280,12 +1269,11 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievements",
             "()Ljava/util/List;"))
 		{
 			jobject ret = t.env->CallObjectMethod((jobject)self, t.methodID);
-			t.env->DeleteLocalRef(ret);
 			return (AchievementList*)ret;
 		}
 		return NULL;
@@ -1295,7 +1283,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "countAchievedAwards",
             "()I"))
 		{
@@ -1310,7 +1298,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1327,7 +1315,7 @@ namespace Scoreloop
 	{	
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1345,7 +1333,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1363,7 +1351,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1373,7 +1361,7 @@ namespace Scoreloop
 			t.env->DeleteLocalRef(t.classID);
 
 			if (JniHelper::getMethodInfo(t,
-				"com.scoreloop.client.android.core.model.Achievement",
+				"com/scoreloop/client/android/core/model/Achievement",
 				"setValue",
 				"(I)V"))
 			{
@@ -1382,7 +1370,7 @@ namespace Scoreloop
 
 				bool needsSubmit = false;
 				if (JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.model.Achievement",
+					"com/scoreloop/client/android/core/model/Achievement",
 					"needsSubmit",
 					"()Z"))
 				{
@@ -1392,7 +1380,7 @@ namespace Scoreloop
 
 				if (needsSubmit &&
 					JniHelper::getStaticMethodInfo(t,
-						"com.ursinepaw.scoreloop.Scoreloop",
+						"com/ursinepaw/scoreloop/Scoreloop",
 						"scheduleAchievementsSynchronization",
 						"()V"))
 				{
@@ -1407,7 +1395,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1417,7 +1405,7 @@ namespace Scoreloop
 			t.env->DeleteLocalRef(t.classID);
 
 			if (JniHelper::getMethodInfo(t,
-				"com.scoreloop.client.android.core.model.Achievement",
+				"com/scoreloop/client/android/core/model/Achievement",
 				"setAchieved",
 				"()V"))
 			{
@@ -1426,7 +1414,7 @@ namespace Scoreloop
 
 				bool needsSubmit = false;
 				if (JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.model.Achievement",
+					"com/scoreloop/client/android/core/model/Achievement",
 					"needsSubmit",
 					"()Z"))
 				{
@@ -1436,7 +1424,7 @@ namespace Scoreloop
 
 				if (needsSubmit &&
 					JniHelper::getStaticMethodInfo(t,
-						"com.ursinepaw.scoreloop.Scoreloop",
+						"com/ursinepaw/scoreloop/Scoreloop",
 						"scheduleAchievementsSynchronization",
 						"()V"))
 				{
@@ -1451,7 +1439,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.AchievementsController",
+            "com/scoreloop/client/android/core/controller/AchievementsController",
             "getAchievementForAwardIdentifier",
             "(Ljava/lang/String;)Lcom/scoreloop/client/android/core/model/Achievement;"))
 		{
@@ -1461,7 +1449,7 @@ namespace Scoreloop
 			t.env->DeleteLocalRef(t.classID);
 
 			if (JniHelper::getMethodInfo(t,
-				"com.scoreloop.client.android.core.model.Achievement",
+				"com/scoreloop/client/android/core/model/Achievement",
 				"incrementValue",
 				"()V"))
 			{
@@ -1470,7 +1458,7 @@ namespace Scoreloop
 
 				bool needsSubmit = false;
 				if (JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.model.Achievement",
+					"com/scoreloop/client/android/core/model/Achievement",
 					"needsSubmit",
 					"()Z"))
 				{
@@ -1480,7 +1468,7 @@ namespace Scoreloop
 
 				if (needsSubmit &&
 					JniHelper::getStaticMethodInfo(t,
-						"com.ursinepaw.scoreloop.Scoreloop",
+						"com/ursinepaw/scoreloop/Scoreloop",
 						"scheduleAchievementsSynchronization",
 						"()V"))
 				{
@@ -1496,14 +1484,13 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "rankingControllerCreate",
             "(J)Lcom/scoreloop/client/android/core/controller/RankingController;"))
 		{
 			jlong arg = (long)(void*)callback;
 			jobject ret = t.env->CallStaticObjectMethod(t.classID, t.methodID, arg);
 			t.env->DeleteLocalRef(t.classID);
-			t.env->DeleteLocalRef(ret);
 			return (RankingController*)t.env->NewGlobalRef(ret);
 		}
 		return NULL;
@@ -1540,7 +1527,7 @@ namespace Scoreloop
 		jobject search_list = NULL;
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.scoreloop.client.android.core.model.SearchList",
+            "com/scoreloop/client/android/core/model/SearchList",
             method_name,
             "()Lcom/scoreloop/client/android/core/model/SearchList;"))
 		{
@@ -1550,7 +1537,7 @@ namespace Scoreloop
 
 		if (search_list != NULL &&
 			JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.controller.RankingController",
+					"com/scoreloop/client/android/core/controller/RankingController",
 					"setSearchList",
 					"(Lcom/scoreloop/client/android/core/model/SearchList;)V"))
 		{
@@ -1563,7 +1550,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "rankingControllerLoadRankingForScore",
             "(Lcom/scoreloop/client/android/core/controller/RankingController;Lcom/scoreloop/client/android/core/model/Score;)V"))
 		{
@@ -1577,7 +1564,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "rankingControllerLoadRankingForUserInMode",
             "(Lcom/scoreloop/client/android/core/controller/RankingController;Lcom/scoreloop/client/android/core/model/User;I)V"))
 		{
@@ -1590,7 +1577,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.RankingController",
+            "com/scoreloop/client/android/core/controller/RankingController",
             "getRanking",
             "()Lcom/scoreloop/client/android/core/model/Ranking;"))
 		{
@@ -1600,7 +1587,7 @@ namespace Scoreloop
 			if (ranking != NULL)
 			{
 				 if (JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.model.Ranking",
+					"com/scoreloop/client/android/core/model/Ranking",
 					"getRank",
 					"()Ljava/lang/Integer;"))
 				{
@@ -1611,7 +1598,7 @@ namespace Scoreloop
 					if (value != NULL)
 					{						
 						if (JniHelper::getMethodInfo(t,
-								"java.lang.Integer",
+								"java/lang/Integer",
 								"intValue",
 								"()I"))
 						{
@@ -1632,7 +1619,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getMethodInfo(t,
-            "com.scoreloop.client.android.core.controller.RankingController",
+            "com/scoreloop/client/android/core/controller/RankingController",
             "getRanking",
             "()Lcom/scoreloop/client/android/core/model/Ranking;"))
 		{
@@ -1642,7 +1629,7 @@ namespace Scoreloop
 			if (ranking != NULL)
 			{
 				 if (JniHelper::getMethodInfo(t,
-					"com.scoreloop.client.android.core.model.Ranking",
+					"com/scoreloop/client/android/core/model/Ranking",
 					"getTotal",
 					"()Ljava/lang/Integer;"))
 				{
@@ -1653,7 +1640,7 @@ namespace Scoreloop
 					if (value != NULL)
 					{						
 						if (JniHelper::getMethodInfo(t,
-								"java.lang.Integer",
+								"java/lang/Integer",
 								"intValue",
 								"()I"))
 						{
@@ -1674,7 +1661,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "initialize",
             "(J)V"))
 		{
@@ -1692,7 +1679,7 @@ namespace Scoreloop
 	{
 		JniMethodInfo t;
         if (JniHelper::getStaticMethodInfo(t,
-            "com.ursinepaw.scoreloop.Scoreloop",
+            "com/ursinepaw/scoreloop/Scoreloop",
             "isInitialized",
             "()Z"))
 		{
