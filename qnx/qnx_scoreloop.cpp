@@ -738,7 +738,7 @@ namespace Scoreloop
 		if (rc != SC_OK)
 			_HandleError(rc);
 #else
-		SC_Error_t rc == SC_OK;
+		SC_Error_t rc = SC_OK;
 		if (user != NULL)
 			rc = SC_AchievementsController_SetUser((SC_AchievementsController_h)self, (SC_User_h)user);
 		if (rc == SC_OK)
